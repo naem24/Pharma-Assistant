@@ -107,7 +107,7 @@ if(selected == 'Market Scoring - Africa'):
 
         # 4. Initialize Gemini Client and call the LLM
         llm = OpenAI(
-            api_key="sk-ba95252b06cf455cb628c8f350acef51", base_url="https://api.deepseek.com"
+            api_key=st.secrets["OPENAI_API_KEY"], base_url="https://api.deepseek.com"
         )
 
         response = llm.chat.completions.create(
@@ -293,7 +293,7 @@ elif(selected == 'Regulatory and Compliance'):
         user_prompt = f"Context from PDF:\n{context}\n\nQuestion: {query}"
 
         llm = OpenAI(
-            api_key="sk-ba95252b06cf455cb628c8f350acef51", base_url="https://api.deepseek.com"
+            api_key=st.secrets["OPENAI_API_KEY"], base_url="https://api.deepseek.com"
         )
 
         response = llm.chat.completions.create(
@@ -322,7 +322,7 @@ elif(selected == 'Regulatory and Compliance'):
 
         # Rule 2 - Use standard chat.completions.create with the correct json_object dictionary format
         deepseek_client = OpenAI(
-            api_key="sk-ba95252b06cf455cb628c8f350acef51", base_url="https://api.deepseek.com"
+            api_key=st.secrets["OPENAI_API_KEY"], base_url="https://api.deepseek.com"
         )
 
         response = deepseek_client.chat.completions.create(
