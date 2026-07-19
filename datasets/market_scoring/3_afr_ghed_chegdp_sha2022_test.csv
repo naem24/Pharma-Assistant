@@ -1,0 +1,47 @@
+Expenditure,Country_Code,Country,Year,GDP_Total
+3.62,DZA,Algeria,2022,190
+2.93,AGO,Angola,2022,121
+2.68,BEN,Benin,2022,17
+5.73,BWA,Botswana,2022,20
+6.77,BFA,Burkina Faso,2022,18
+8.4,BDI,Burundi,2022,4
+6.67,CPV,Cabo Verde,2022,2
+4.48,CMR,Cameroon,2022,44
+9.96,CAF,Central African Republic,2022,2
+4.53,TCD,Chad,2022,16
+8.38,COM,Comoros,2022,1
+2.19,COG,Congo,2022,15
+3.79,COD,DR Congo,2022,70
+2.91,GNQ,Equatorial Guinea,2022,13
+3.87,ERI,Eritrea,2022,2
+7.22,SWZ,Eswatini,2022,4
+2.85,ETH,Ethiopia,2022,113
+2.86,GAB,Gabon,2022,20
+3.56,GMB,Gambia,2022,2
+3.7,GHA,Ghana,2022,73
+3.96,GIN,Guinea,2022,19
+8.11,GNB,Guinea-Bissau,2022,1
+4.33,KEN,Kenya,2022,113
+12.65,LSO,Lesotho,2022,2
+13.47,LBR,Liberia,2022,4
+3.25,MDG,Madagascar,2022,15
+6.5,MWI,Malawi,2022,12
+3.67,MLI,Mali,2022,22
+4.48,MRT,Mauritania,2022,9
+5.82,MUS,Mauritius,2022,12
+8.78,MOZ,Mozambique,2022,18
+9.3,NAM,Namibia,2022,12
+4.35,NER,Niger,2022,15
+4.27,NGA,Nigeria,2022,477
+7.88,RWA,Rwanda,2022,13
+7.46,STP,Sao Tome and Principe,2022,1
+4.06,SEN,Senegal,2022,27
+4.24,SYC,Seychelles,2022,2
+7.95,SLE,Sierra Leone,2022,7
+8.77,ZAF,South Africa,2022,405
+6.76,SSD,South Sudan,2022,6
+3.11,TZA,Tanzania,2022,75
+6.04,TGO,Togo,2022,8
+4.39,UGA,Uganda,2022,47
+5.26,ZMB,Zambia,2022,29
+3.63,ZWE,Zimbabwe,2022,40
