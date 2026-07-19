@@ -25,15 +25,10 @@ st.set_page_config(
 
 # hide the part of the code, as this is just for adding some custom CSS styling but not a part of the main idea 
 hide_streamlit_style = """
-	<style>
-    #MainMenu {visibility: hidden;}
-	footer {visibility: hidden;}
-    #GithubIcon {visibility: hidden;}
-    .styles_viewerBadge__1yB5_ {display: none;}
-    .viewerBadge_link__1S137 {display: none;}
-    .viewerBadge_text__1JaDK {display: none;
-    div.block-container{padding-top:2rem;}
-    div.stButton {text-align:center;}
+    <style>
+    [data-testid="stToolbar"] {visibility: hidden !important; display: none !important;}
+    [data-testid="stHeaderActionElements"] {visibility: hidden !important; display: none !important;}
+    #stDecoration {display:none !important;}
     </style>
 """
 
