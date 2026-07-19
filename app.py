@@ -28,6 +28,10 @@ hide_streamlit_style = """
 	<style>
     #MainMenu {visibility: hidden;}
 	footer {visibility: hidden;}
+    #GithubIcon {visibility: hidden;}
+    .styles_viewerBadge__1yB5_ {display: none;}
+    .viewerBadge_link__1S137 {display: none;}
+    .viewerBadge_text__1JaDK {display: none;
     div.block-container{padding-top:2rem;}
     div.stButton {text-align:center;}
     </style>
