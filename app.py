@@ -253,8 +253,6 @@ if(selected == 'Market Scoring - Africa'):
     except KeyError as e:
         st.error(f"Please ensure the column names in your code match the actual headers in your CSV files. Missing/Mismatch Error: {e}")
 elif(selected == 'Price Discovery'):
-    # st.header('Price Discovery')
-    # st.write("Instructional Text for Price Discovery")
 
     st.header("Price Discovery Intelligence Dashboard")
     st.write("Analyze the raw material (API/excipient) composition and cross-border price benchmarks for drugs ordered globally. Select a drug category and specific drug to analyze its raw material composition and cross-border price benchmarks.")
