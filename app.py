@@ -12,6 +12,8 @@ from openai import OpenAI
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from sentence_transformers import SentenceTransformer
 
+from google.genai import Client
+
 # hide deprication warnings which directly don't affect the working of the application
 import warnings
 warnings.filterwarnings("ignore")
@@ -29,6 +31,17 @@ hide_streamlit_style = """
     [data-testid="stToolbar"] {visibility: hidden !important; display: none !important;}
     [data-testid="stHeaderActionElements"] {visibility: hidden !important; display: none !important;}
     #stDecoration {display:none !important;}
+
+    /* Target the main container class */
+    .stMainBlockContainer, .block-container {
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
+        padding-left: 3rem !important;
+        padding-right: 3rem !important;
+    }
+    hr{
+        margin:10px 0px !important;
+    }
     </style>
 """
 
@@ -36,10 +49,10 @@ hide_streamlit_style = """
 # Also, allow streamlit to unsafely process as HTML
 st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
 
-st.title("Pharma Assistant")
+# st.title("Pharma Assistant")
 
 with st.sidebar:
-    st.title("Navigation")
+    st.title("Sanbe Pharma Assistant")
     selected = st.radio(
         "Choose an option:",
         ["Price Discovery", "Market Scoring - Africa", "Regulatory and Compliance"]
@@ -240,9 +253,160 @@ if(selected == 'Market Scoring - Africa'):
     except KeyError as e:
         st.error(f"Please ensure the column names in your code match the actual headers in your CSV files. Missing/Mismatch Error: {e}")
 elif(selected == 'Price Discovery'):
-    st.header('Price Discovery')
-    st.write("Instructional Text for Price Discovery")
+    # st.header('Price Discovery')
+    # st.write("Instructional Text for Price Discovery")
 
+    st.header("Price Discovery Intelligence Dashboard")
+    st.write("Analyze the raw material (API/excipient) composition and cross-border price benchmarks for drugs ordered globally. Select a drug category and specific drug to analyze its raw material composition and cross-border price benchmarks.")
+    st.divider()
+
+    # Hardcoded Drug Configurations
+    DRUG_MENU = {
+        "Antibiotics and Chemotherapeutics": [
+            "Sensiclav (Amoxicillin/Clavulanic Acid)", 
+            "Cefspan (Cefixime)", 
+            "Amoxil (Amoxicillin)"
+        ],
+        "Antihistamines and Antiallergics": [
+            "Incidal (Cetirizine)", 
+            "Aldoril", 
+            "Ryzen"
+        ],
+        "Analgesics and Antipyretics": [
+            "Paracetamol SA", 
+            "Pragesol"
+        ]
+    }
+
+    # 1. Create a 2-column layout for the dropdown fields
+    # Using equal weights [1, 1] splits the width 50/50
+    col1, col2, col3 = st.columns([1, 1, 1], vertical_alignment="bottom")
+    
+    with col1:
+        # This dropdown will sit cleanly on the left side
+        category_selected = st.selectbox(
+            "Select Target Drug Category", 
+            options=list(DRUG_MENU.keys())
+        )
+        
+    with col2:
+        # This dropdown will sit cleanly on the right side
+        drug_options = DRUG_MENU[category_selected]
+        drug_selected = st.selectbox(
+            "Select Specific Regional Drug Name", 
+            options=drug_options
+        )
+
+    with col3:
+      discover_button = st.button("🔍 DISCOVER RAW MATERIALS & PRICES", type="primary")
+
+      print("--> Before calling the OpenAI API. Drug Selected:", drug_selected  )
+
+    # 2. Add the Action Button right underneath the split layout
+    if discover_button:
+        with st.spinner(f"Querying global pharmaceutical indices for {drug_selected}..."):
+            try:
+                # client = Client()
+            
+                # Use the prompt format we built earlier
+                prompt = f"""
+                You are a pharmaceutical supply chain intelligence expert assisting Sanbe Pharma.
+                For the drug product named '{drug_selected}', perform the following tasks:
+                1. Identify its primary Active Pharmaceutical Ingredients (API) and key common excipients.
+                2. Research and list the recent estimated bulk raw material market prices per kilogram spanning across key manufacturing regions EXCLUDING Indonesia (e.g., India, China, Europe, USA).
+                3. Output your findings strictly in a clean Markdown table format with the columns: [Raw Material, Manufacturing Hub, Est. Price (USD/kg), Market Status].
+                
+                Keep your response highly factual, technical, and objective. Do not include introductory conversational filler.
+                """
+                
+                deepseek_client = OpenAI(
+                            api_key=st.secrets["OPENAI_API_KEY"], base_url="https://api.deepseek.com"
+                        )
+
+                response = deepseek_client.chat.completions.create(
+                    model="deepseek-chat",
+                   messages=[
+                        {
+                            "role": "system", 
+                            "content": "You are a pharmaceutical supply chain intelligence expert assisting Sanbe Pharma."
+                        },
+                        {
+                            "role": "user", 
+                            "content": f"Generate the price discovery report for this target drug using these parameters:\n\n{prompt}"
+                        },
+                    ],
+                    response_format={"type": "json_object"},  # Validated format allowed by DeepSeek
+                    temperature=0.2,
+                )
+
+                    
+                # Extract the response text
+                response_text = response.choices[0].message.content
+                
+                # --- FULL-WIDTH RESULTS ENGINE ---
+                # everything below will naturally expand to full width automatically!
+                st.divider()
+                st.success("🎉 Analysis Complete! Cross-border supply chain metrics loaded.")
+                
+                st.subheader(f"Target Compound: {drug_selected}")
+                
+                # st.info(f"**Core Component Profile**\n* **Target Category:** {category_selected}\n* **Sourcing Focus:** Global pipelines")    
+                
+                try:
+                    # Read the markdown string lines
+                    lines = [line.strip() for line in response_text.strip().split("\n") if line.strip()]
+                    
+                    # Find the line that looks like a markdown table header (contains pipes '|')
+                    table_lines = [line for line in lines if "|" in line]
+                    
+                    if len(table_lines) >= 3: # Header, Separator line (---|---), and at least 1 Data row
+                        # Extract header columns
+                        headers = [cell.strip() for cell in table_lines[0].split("|") if cell.strip()]
+                        
+                        # Extract data rows (skip header row and separator row)
+                        data_rows = []
+                        for row in table_lines[2:]:
+                            cells = [cell.strip() for cell in row.split("|") if cell.strip()]
+                            # Ensure row length matches header length to avoid misalignment crashes
+                            if len(cells) == len(headers):
+                                data_rows.append(cells)
+                        
+                        # Create the DataFrame
+                        df_ai = pd.DataFrame(data_rows, columns=headers)
+                        
+                        # Render the beautiful interactive Streamlit Grid component!
+                        st.dataframe(df_ai, width="stretch", hide_index=True)
+                    else:
+                        # Fallback to plain markdown if the structure wasn't a clean table
+                        st.markdown(response_text)
+                        
+                except Exception as parse_error:
+                    # Safe fallback if string splitting fails on anomalous formats
+                    st.markdown(response_text)
+                
+            except Exception as e:
+                st.error("Could not complete the Live AI connection.")
+
+                print("\n=== DETAILED API ERROR LOG ===")
+                import traceback
+                traceback.print_exc() # Prints the entire backend error traceback in your cmd terminal
+                print("===============================\n")
+                
+                st.divider()
+                
+                # Full-width fallback mock data container
+                # st.warning("⚠️ Displaying structural Layout Preview (Mock Data Scenario):")
+                # st.header("Supply Chain Intelligence Summary")
+                st.subheader(f"Target Compound: {drug_selected}")
+                
+                mock_data = {
+                    "Raw Material": ["Amoxicillin Trihydrate", "Amoxicillin Trihydrate", "Potassium Clavulanate", "Magnesium Stearate"],
+                    "Manufacturing Hub": ["India", "China", "Europe (Eurasia)", "India (Excipient)"],
+                    "Est. Price (USD/kg)": ["$22.50 - $24.00", "$21.00 - $23.10", "$85.00 - $92.00", "$3.80 - $4.50"],
+                    "Market Status": ["Stable Supply", "High Export Vol", "Strict GMP Reg.", "Bulk Availability"]
+                }
+                st.dataframe(pd.DataFrame(mock_data), use_container_width=True, hide_index=True)
+    
     # YOUR CODE FOR PRICE DISCOVERY GOES HERE
 elif(selected == 'Regulatory and Compliance'):
     st.header('Regulatory and Compliance')
