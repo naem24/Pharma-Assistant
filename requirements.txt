@@ -98,3 +98,4 @@ watchdog==6.0.0
 websockets==16.1.1
 xxhash==3.8.1
 zstandard==0.25.0
+torchvision==0.28.0
