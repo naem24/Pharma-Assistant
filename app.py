@@ -400,8 +400,6 @@ elif(selected == 'Price Discovery'):
                     "Market Status": ["Stable Supply", "High Export Vol", "Strict GMP Reg.", "Bulk Availability"]
                 }
                 st.dataframe(pd.DataFrame(mock_data), use_container_width=True, hide_index=True)
-    
-    # YOUR CODE FOR PRICE DISCOVERY GOES HERE
 elif(selected == 'Regulatory and Compliance'):
     st.header('Regulatory and Compliance')
     st.write("Instructional Text for Regulatory and Compliance")
