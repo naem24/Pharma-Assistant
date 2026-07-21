@@ -305,7 +305,7 @@ elif(selected == 'Price Discovery'):
     # 2. Add the Action Button right underneath the split layout
     if discover_button:
         with st.spinner(f"Querying global pharmaceutical indices for {drug_selected}..."):
-            try:         
+            try:
                 # Use the prompt format we built earlier
                 prompt = f"""
                 You are a pharmaceutical supply chain intelligence expert assisting Sanbe Pharma.
