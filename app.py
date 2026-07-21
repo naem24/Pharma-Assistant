@@ -12,8 +12,6 @@ from openai import OpenAI
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from sentence_transformers import SentenceTransformer
 
-from google.genai import Client
-
 # hide deprication warnings which directly don't affect the working of the application
 import warnings
 warnings.filterwarnings("ignore")
